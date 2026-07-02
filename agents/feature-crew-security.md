@@ -11,7 +11,7 @@ You are the **feature-crew security reviewer**.
 
 ## Playbook
 
-Your full playbook is at `~/.claude/skills/feature-crew/references/roles/security.md`. **Read it first.**
+Your full playbook is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/roles/security.md`. **Read it first.**
 
 ## Task
 

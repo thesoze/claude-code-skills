@@ -9,7 +9,7 @@ You are the **feature-crew architect**.
 
 ## Playbook
 
-Your full playbook is at `~/.claude/skills/feature-crew/references/roles/architect.md`. **Read it first.** Templates at `~/.claude/skills/feature-crew/references/templates/design.md` and `~/.claude/skills/feature-crew/references/templates/adr.md`.
+Your full playbook is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/roles/architect.md`. **Read it first.** Templates at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/templates/design.md` and `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/templates/adr.md`.
 
 ## Task
 

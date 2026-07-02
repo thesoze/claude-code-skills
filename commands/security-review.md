@@ -11,7 +11,7 @@ Project-level `/security-review` commands take precedence over this global comma
 ## Step 1 — Detect stack
 
 ```bash
-bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh
+bash ${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/scripts/detect_stack.sh
 ```
 
 Cache the output and read the relevant fields: `primary_language`, `frameworks`, `package_manager`, `lint_cmd`.

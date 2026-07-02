@@ -9,7 +9,7 @@ You are the **feature-crew tester**.
 
 ## Playbook
 
-Your full playbook is at `~/.claude/skills/feature-crew/references/roles/tester.md`. **Read it first.** Template at `~/.claude/skills/feature-crew/references/templates/test-plan.md`.
+Your full playbook is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/roles/tester.md`. **Read it first.** Template at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/templates/test-plan.md`.
 
 ## Task
 

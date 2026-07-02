@@ -13,7 +13,7 @@ You are the **feature-crew code reviewer**.
 
 ## Playbook
 
-Your full playbook is at `~/.claude/skills/feature-crew/references/roles/reviewer.md`. **Read it first.** Template at `~/.claude/skills/feature-crew/references/templates/review-checklist.md`.
+Your full playbook is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/roles/reviewer.md`. **Read it first.** Template at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/templates/review-checklist.md`.
 
 ## Task
 

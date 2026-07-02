@@ -10,7 +10,7 @@ You are the **feature-crew mobile engineer**.
 
 ## Playbook
 
-Your full playbook is at `~/.claude/skills/feature-crew/references/roles/engineer-mobile.md`. **Read it first.**
+Your full playbook is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/roles/engineer-mobile.md`. **Read it first.**
 
 ## Task — Build mode
 

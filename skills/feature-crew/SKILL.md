@@ -9,6 +9,10 @@ You are the **orchestrator**. You do not write code. You do not write tests. You
 
 If you catch yourself reaching for Edit/Write on product code, stop. That is a subagent's job.
 
+## Skill root (resolve first)
+
+This skill's bundled files live under `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/`. That variable is substituted at runtime when installed as a plugin. Any `references/…`, `scripts/…`, or `templates/…` path mentioned below is relative to that root — expand it to the absolute `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/<path>` form before you Read a file or run a script, and before you hand a path to a subagent.
+
 ## Trigger
 
 Invoke this skill when the user says any of:
@@ -45,7 +49,7 @@ Each phase has a single subagent type (or is orchestrator-inline for lightweight
 |---|---|---|---|---|
 | 0 | Intake | orchestrator | user request | `request.md` |
 | 1 | Triage | `feature-crew-triage` (haiku) | `request.md` | `crew_plan.json` |
-| 2 | Discovery | orchestrator + `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` | repo state | `discovery.md` (inventory + stack profile) |
+| 2 | Discovery | orchestrator + `bash ${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/scripts/detect_stack.sh` | repo state | `discovery.md` (inventory + stack profile) |
 | 3 | Spec | `feature-crew-pm` | `request.md`, `discovery.md` | `spec.md` |
 | — | **Gate 1** | orchestrator | `spec.md` | approval or pushback |
 | 4 | Design | `feature-crew-architect` | `spec.md`, `discovery.md` | `design.md`, optional `adr-NNN-*.md` |
@@ -154,7 +158,7 @@ specs/<slug>/
 └── changelog.md            # staged CHANGELOG entry
 ```
 
-Slug = `YYYY-MM-DD-<kebab-title>`. Create via `bash ~/.claude/skills/feature-crew/scripts/new_feature.sh <slug>`.
+Slug = `YYYY-MM-DD-<kebab-title>`. Create via `bash ${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/scripts/new_feature.sh <slug>`.
 
 ## state.json schema
 
@@ -212,7 +216,7 @@ One phase back, max. Rolling back from Review → Build increments iteration cou
 
 ## Stack detection
 
-Every run, first call `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` from the repo root. Cache the JSON output into `state.json.stack`. All role playbooks reference `{{stack.lint_cmd}}`, `{{stack.test_cmd}}`, `{{stack.build_cmd}}`, `{{stack.primary_language}}`, `{{stack.frameworks}}` — the exact keys `detect_stack.sh` emits. Resolve these from `state.json.stack` before passing any prompt to a subagent.
+Every run, first call `bash ${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/scripts/detect_stack.sh` from the repo root. Cache the JSON output into `state.json.stack`. All role playbooks reference `{{stack.lint_cmd}}`, `{{stack.test_cmd}}`, `{{stack.build_cmd}}`, `{{stack.primary_language}}`, `{{stack.frameworks}}` — the exact keys `detect_stack.sh` emits. Resolve these from `state.json.stack` before passing any prompt to a subagent.
 
 If `detect_stack.sh` returns `unknown` for any field, ask the user before proceeding. Do not guess.
 
@@ -266,9 +270,9 @@ All overrides are logged in `state.json.skipped` with reason and timestamp.
 
 At the top of every feature run:
 
-1. `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` → cache.
+1. `bash ${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/scripts/detect_stack.sh` → cache.
 2. Read `references/gotchas.md`.
-3. Create `specs/<slug>/` via `bash ~/.claude/skills/feature-crew/scripts/new_feature.sh <slug>`.
+3. Create `specs/<slug>/` via `bash ${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/scripts/new_feature.sh <slug>`.
 4. Write `request.md` verbatim.
 5. Spawn triage. Read `crew_plan.json`. Override if heuristics disagree.
 6. Announce plan to user: size, risk, crew, which gates will be auto vs human.

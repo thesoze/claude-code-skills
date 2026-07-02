@@ -1,0 +1,15 @@
+{
+  "name": "thesoze-claude-code-skills",
+  "owner": {
+    "name": "thesoze",
+    "email": "16653743+thesoze@users.noreply.github.com"
+  },
+  "description": "thesoze's Claude Code skill suite: feature-crew SDLC orchestrator, project-kickoff, and SAST/DAST commands.",
+  "plugins": [
+    {
+      "name": "claude-code-skills",
+      "source": "./",
+      "description": "Feature-crew multi-agent SDLC orchestrator + 12 subagents, project-kickoff setup/audit, and /security-review + /pentest commands."
+    }
+  ]
+}

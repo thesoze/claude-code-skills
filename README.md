@@ -13,26 +13,25 @@ Everything is stack-agnostic — Python, TypeScript, Go, Rust, Ruby, Java, Swift
 
 ## Install
 
-Clone once, then symlink each bundle to Claude Code's well-known locations.
+This repo is a **Claude Code plugin** — skills, the 12 subagents, and the slash commands install together as one versioned unit.
+
+```
+/plugin marketplace add thesoze/claude-code-skills
+/plugin install claude-code-skills@thesoze-claude-code-skills
+```
+
+That's it. Skills become namespaced — `/claude-code-skills:feature-crew`, `/claude-code-skills:project-kickoff` — and the `/security-review` + `/pentest` commands and all `feature-crew-*` subagents come with them. Update later with `/plugin update claude-code-skills`.
+
+Bundled files reference themselves via `${CLAUDE_PLUGIN_ROOT}`, which Claude Code substitutes at runtime — so the orchestrator and its subagents always resolve to the same installed copy and can't drift apart.
+
+### Manual / development install (optional)
+
+To hack on the skills locally without the marketplace, point Claude Code at the checkout:
 
 ```bash
 git clone https://github.com/thesoze/claude-code-skills.git
-cd claude-code-skills
-
-# Skills (installs to ~/.claude/skills/<name>/)
-mkdir -p ~/.claude/skills
-for d in skills/*/; do ln -sf "$PWD/$d" ~/.claude/skills/; done
-
-# Subagents (installs to ~/.claude/agents/)
-mkdir -p ~/.claude/agents
-for f in agents/*.md; do ln -sf "$PWD/$f" ~/.claude/agents/; done
-
-# Slash commands (installs to ~/.claude/commands/)
-mkdir -p ~/.claude/commands
-for f in commands/*.md; do ln -sf "$PWD/$f" ~/.claude/commands/; done
+claude --plugin-dir ./claude-code-skills
 ```
-
-Project-scoped install: drop the same folders under `.claude/` at the repo root instead of `~/.claude/`. Project-level skills/commands take precedence over global.
 
 Restart Claude Code (or run `/reload`) after installing.
 

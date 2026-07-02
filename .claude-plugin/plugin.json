@@ -1,0 +1,14 @@
+{
+  "name": "claude-code-skills",
+  "displayName": "Claude Code Skills — Feature Crew + Project Kickoff",
+  "description": "Multi-agent SDLC orchestration (feature-crew skill + 12 subagents) plus project-kickoff setup/audit, and stack-agnostic SAST/DAST slash commands. Files-first, gate-honest, fresh-context reviewers.",
+  "version": "1.0.0",
+  "author": {
+    "name": "thesoze",
+    "email": "16653743+thesoze@users.noreply.github.com"
+  },
+  "homepage": "https://github.com/thesoze/claude-code-skills",
+  "repository": "https://github.com/thesoze/claude-code-skills",
+  "license": "MIT",
+  "keywords": ["sdlc", "orchestration", "subagents", "security-review", "pentest", "code-review", "feature-crew"]
+}

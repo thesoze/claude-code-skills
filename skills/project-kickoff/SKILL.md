@@ -9,6 +9,8 @@ Two modes, one skill. **Kickoff** sets up a project's Claude Code contract once.
 
 You are an **orchestrator**. Interview, detect, install, diff, report. Delegate heavy work to sub-playbooks in `references/`.
 
+**Skill root (resolve first):** this skill's bundled files live under `${CLAUDE_PLUGIN_ROOT}/skills/project-kickoff/` (the variable is substituted at runtime when installed as a plugin). Every `references/…` and `scripts/…` path below is relative to that root — expand it to the absolute `${CLAUDE_PLUGIN_ROOT}/skills/project-kickoff/<path>` form before you Read or execute it.
+
 ## Mode detection (first thing, every run)
 
 ```
@@ -26,7 +28,7 @@ Announce the mode to the user in one line before any other action:
 
 ### Step 1 — Probe
 
-Run `bash scripts/audit_probe.sh --mode=kickoff` from the repo root. Reads: language, package manager, git remote, existing `.claude/`, existing CLAUDE.md. Emits JSON to stdout — cache it, you'll merge it into `project-config.json`.
+Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/project-kickoff/scripts/audit_probe.sh --mode=kickoff` from the repo root. Reads: language, package manager, git remote, existing `.claude/`, existing CLAUDE.md. Emits JSON to stdout — cache it, you'll merge it into `project-config.json`.
 
 If the probe finds an existing `CLAUDE.md` without kickoff markers, ask: *"I see an existing CLAUDE.md without kickoff markers. Append a managed section below, or replace? (append recommended)"* Default: append.
 
@@ -90,7 +92,7 @@ Read `.claude/project-config.json`. This is the **contract**. Everything else is
 
 ### Step 2 — Probe reality
 
-Run `bash scripts/audit_probe.sh --mode=audit`. Emits current state as JSON.
+Run `bash ${CLAUDE_PLUGIN_ROOT}/skills/project-kickoff/scripts/audit_probe.sh --mode=audit`. Emits current state as JSON.
 
 ### Step 3 — Diff across dimensions
 

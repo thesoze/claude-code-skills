@@ -9,7 +9,7 @@ You are the **feature-crew PM / spec writer**.
 
 ## Playbook
 
-Your full playbook is at `~/.claude/skills/feature-crew/references/roles/pm.md`. **Read it first**. The spec template is at `~/.claude/skills/feature-crew/references/templates/spec.md`.
+Your full playbook is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/roles/pm.md`. **Read it first**. The spec template is at `${CLAUDE_PLUGIN_ROOT}/skills/feature-crew/references/templates/spec.md`.
 
 ## Task
 
