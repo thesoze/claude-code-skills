@@ -171,26 +171,47 @@ fi
 
 # ---- secret scan (audit mode only) -----------------------------------------
 
+# Emits: status, findings_count, and findings[] = [{path, tracked}]. The
+# tracked flag lets Dimension 3 split BREACH (secret in a git-tracked file) from
+# DRIFT (secret only in an untracked/gitignored file like a local .env).
+# Shared regex set — keep in sync with hook-pretool-secret-scan.py and
+# drift-dimensions.md Dimension 3.
+SECRET_REGEX="(AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36,}|github_pat_[A-Za-z0-9_]{80,}|sk-ant-api03-[A-Za-z0-9_-]{90,}|sk-[A-Za-z0-9]{48,}|xox[baprs]-[0-9A-Za-z-]{10,}|AIza[0-9A-Za-z_-]{35}|-----BEGIN (RSA |EC |OPENSSH |DSA |PGP )?PRIVATE KEY-----)"
+
+is_tracked() { git ls-files --error-unmatch "$1" >/dev/null 2>&1 && echo "true" || echo "false"; }
+
 secret_scan_status="not_run"
 secret_scan_findings_count=0
+secret_findings_json="[]"
 if [[ "$MODE" == "audit" ]]; then
+  found_paths=()
   if command -v gitleaks >/dev/null 2>&1; then
     if gitleaks detect --no-git --redact --exit-code 0 --report-format json --report-path /tmp/gitleaks-audit-$$.json . >/dev/null 2>&1; then
       if [[ -f /tmp/gitleaks-audit-$$.json ]]; then
-        secret_scan_findings_count=$(python3 -c "import json; print(len(json.load(open('/tmp/gitleaks-audit-$$.json'))))" 2>/dev/null || echo 0)
+        while IFS= read -r p; do [[ -n "$p" ]] && found_paths+=("$p"); done < <(
+          python3 -c "import json,sys; d=json.load(open('/tmp/gitleaks-audit-$$.json')); print('\n'.join(sorted({f.get('File','') for f in d if f.get('File')})))" 2>/dev/null
+        )
         rm -f /tmp/gitleaks-audit-$$.json
       fi
       secret_scan_status="gitleaks"
     fi
   else
-    # Minimal regex fallback
-    hits=0
-    hits=$(grep -rhE "(AKIA[0-9A-Z]{16}|gh[pousr]_[A-Za-z0-9]{36,}|sk-ant-api03-[A-Za-z0-9_-]{90,}|-----BEGIN (RSA |EC |OPENSSH )?PRIVATE KEY-----)" \
-      --include="*" \
-      --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=build \
-      . 2>/dev/null | wc -l | tr -d ' ')
-    secret_scan_findings_count="${hits:-0}"
+    # Regex fallback — list matching files (not line counts) so we can report paths.
+    while IFS= read -r p; do [[ -n "$p" ]] && found_paths+=("${p#./}"); done < <(
+      grep -rlE "$SECRET_REGEX" \
+        --exclude-dir=node_modules --exclude-dir=.git --exclude-dir=dist --exclude-dir=build \
+        . 2>/dev/null
+    )
     secret_scan_status="regex_fallback"
+  fi
+
+  secret_scan_findings_count=${#found_paths[@]}
+  if [[ ${#found_paths[@]} -gt 0 ]]; then
+    fentries=()
+    for p in "${found_paths[@]}"; do
+      fentries+=("{\"path\":$(jstr "$p"),\"tracked\":$(is_tracked "$p")}")
+    done
+    secret_findings_json="[$(IFS=,; echo "${fentries[*]}")]"
   fi
 fi
 
@@ -219,6 +240,7 @@ export P_SECTIONS_JSON="$claude_md_sections_json"
 export P_TOOLS_JSON="$recent_tool_usage_json"
 export P_SECRET_STATUS="$secret_scan_status"
 export P_SECRET_COUNT="$secret_scan_findings_count"
+export P_SECRET_FINDINGS_JSON="$secret_findings_json"
 
 python3 <<'PYEOF'
 import json, os
@@ -252,6 +274,7 @@ if os.environ["P_MODE"] == "audit":
     out["secret_scan"] = {
         "status": os.environ["P_SECRET_STATUS"],
         "findings_count": int(os.environ["P_SECRET_COUNT"] or 0),
+        "findings": json.loads(os.environ.get("P_SECRET_FINDINGS_JSON") or "[]"),
     }
 
 print(json.dumps(out, indent=2))

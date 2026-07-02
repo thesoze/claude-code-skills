@@ -83,7 +83,7 @@ If any AC has no corresponding code, flag CRITICAL.
 ### Tests
 - [ ] Each AC has at least one test that would fail if the behavior regresses
 - [ ] Tests written against spec contract, not implementation internals
-- [ ] Edge cases from test-plan §2 covered
+- [ ] Edge cases (empty / invalid / boundary / concurrent / dependency-failure) exercised by the test suite for each AC
 - [ ] No flaky patterns (sleeping, real network, unpinned time)
 - [ ] `{{stack.test_cmd}}` passes clean
 

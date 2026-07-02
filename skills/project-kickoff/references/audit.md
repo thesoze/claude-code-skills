@@ -17,17 +17,16 @@ Read `.claude/project-config.json`. Validate against `references/templates/proje
 bash scripts/audit_probe.sh --mode=audit
 ```
 
-Emits JSON with:
-- `stack`: current primary language, package manager, framework
-- `hooks_present`: list of files under `.claude/hooks/` with sha256
+Emits JSON with (exact keys the script emits):
+- `stack`: `{primary_language, package_manager, frameworks[]}`
+- `hooks_present`: list of `{path, sha256}` for files under `.claude/hooks/`
 - `claude_md_sections_present`: list of section names found between markers
-- `settings_permissions`: current allow/deny lists
-- `recent_tool_usage`: tools called in the last N sessions (grepped from transcripts if accessible; else empty array with a warning)
-- `dep_count`: total deps
-- `dep_advisories`: count of vulns from `{npm,pnpm,yarn} audit` / `pip-audit` / `cargo audit` if available
-- `secret_scan_findings`: list from gitleaks or regex fallback
+- `recent_tool_usage`: best-effort list of tool categories (`external_fetch`, `shell_exec`) grepped from project source; empty array if none
+- `secret_scan`: `{status, findings_count, findings[]}` where each finding is `{path, tracked}` (from gitleaks if installed, else regex fallback)
 
 Cache the JSON. Pass to diff step.
+
+> Not yet emitted (deferred to drift-dimensions v1.5+): `settings_permissions`, `dep_count`, `dep_advisories`. Don't consume these in audit logic until the probe emits them.
 
 ## Step 3 — Diff intent vs reality
 

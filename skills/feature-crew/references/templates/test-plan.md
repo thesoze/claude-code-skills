@@ -84,7 +84,7 @@ If any test must reference implementation details (e.g., an internal function bo
 
 ## 9. Ship Gates
 
-Before Gate 3 passes:
+Gate 3 re-run criteria (the tester writes these after the initial Build→Gate 3; all must be green before ship):
 - [ ] All rows in §1 have tests written
 - [ ] All edge case checklists (§2) green per AC
 - [ ] Lint passes: `{{stack.lint_cmd}}`

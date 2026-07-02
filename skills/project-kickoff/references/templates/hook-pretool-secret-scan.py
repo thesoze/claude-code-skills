@@ -117,9 +117,9 @@ def main() -> int:
     findings = scan(content)
 
     if findings:
-        # Block the tool call by emitting a structured error response.
-        # Claude Code convention: non-zero exit with JSON on stderr, or
-        # a specific envelope shape. We use the "decision" block pattern.
+        # Block the tool call. PreToolUse honors a JSON permission decision on
+        # stdout with exit 0 — this delivers the full reason to the model. (Exit
+        # 2 would block too, but only the terse stderr line would reach it.)
         error_msg = (
             f"Secret-scan guard blocked this write to {path}:\n"
             + "\n".join(
@@ -134,16 +134,19 @@ def main() -> int:
             "  3. Ad-hoc override: run with PROJECT_KICKOFF_SECRET_SCAN=off set in env.\n"
         )
 
-        # Emit a decision response that Claude Code will surface to the model
-        # and prevent the tool call from proceeding.
+        # Emit a permission decision that Claude Code surfaces to the model and
+        # prevents the tool call from proceeding.
         response = {
-            "decision": "block",
-            "reason": error_msg,
+            "hookSpecificOutput": {
+                "hookEventName": "PreToolUse",
+                "permissionDecision": "deny",
+                "permissionDecisionReason": error_msg,
+            },
             "_secret_scan_findings": findings,
         }
         sys.stdout.write(json.dumps(response))
         sys.stderr.write(f"[pretool-secret-scan] BLOCKED write to {path}: {[f['label'] for f in findings]}\n")
-        return 2  # non-zero so the harness treats this as a block
+        return 0  # exit 0 — the JSON deny above is the block signal
 
     # Clean — pass through unchanged
     sys.stdout.write(raw)

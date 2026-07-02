@@ -86,7 +86,7 @@ if has_any pyproject.toml setup.py requirements.txt Pipfile; then
   langs+=("python")
 
   # Package manager / runner
-  if has uv.lock || has .python-version && has pyproject.toml; then
+  if has uv.lock || { has .python-version && has pyproject.toml; }; then
     if command -v uv >/dev/null 2>&1; then
       pm="${pm/unknown/uv}"
     fi

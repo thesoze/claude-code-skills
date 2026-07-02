@@ -45,7 +45,7 @@ Each phase has a single subagent type (or is orchestrator-inline for lightweight
 |---|---|---|---|---|
 | 0 | Intake | orchestrator | user request | `request.md` |
 | 1 | Triage | `feature-crew-triage` (haiku) | `request.md` | `crew_plan.json` |
-| 2 | Discovery | orchestrator + `bash scripts/detect_stack.sh` | repo state | `discovery.md` (inventory + stack profile) |
+| 2 | Discovery | orchestrator + `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` | repo state | `discovery.md` (inventory + stack profile) |
 | 3 | Spec | `feature-crew-pm` | `request.md`, `discovery.md` | `spec.md` |
 | — | **Gate 1** | orchestrator | `spec.md` | approval or pushback |
 | 4 | Design | `feature-crew-architect` | `spec.md`, `discovery.md` | `design.md`, optional `adr-NNN-*.md` |
@@ -150,10 +150,11 @@ specs/<slug>/
 ├── test-plan.md            # coverage matrix per AC
 ├── review.md               # CRITICAL / WARN / SUGGEST findings
 ├── security-review.md      # (conditional)
+├── ops-plan.md             # (conditional) devops migrations + rollout + rollback
 └── changelog.md            # staged CHANGELOG entry
 ```
 
-Slug = `YYYY-MM-DD-<kebab-title>`. Create via `bash scripts/new_feature.sh <slug>`.
+Slug = `YYYY-MM-DD-<kebab-title>`. Create via `bash ~/.claude/skills/feature-crew/scripts/new_feature.sh <slug>`.
 
 ## state.json schema
 
@@ -211,7 +212,7 @@ One phase back, max. Rolling back from Review → Build increments iteration cou
 
 ## Stack detection
 
-Every run, first call `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` from the repo root. Cache the JSON output into `state.json.stack`. All role playbooks reference `{{stack.lint_cmd}}`, `{{stack.test_cmd}}`, `{{stack.build_cmd}}`, `{{stack.language}}`, `{{stack.framework}}` — you must resolve these from `state.json.stack` before passing any prompt to a subagent.
+Every run, first call `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` from the repo root. Cache the JSON output into `state.json.stack`. All role playbooks reference `{{stack.lint_cmd}}`, `{{stack.test_cmd}}`, `{{stack.build_cmd}}`, `{{stack.primary_language}}`, `{{stack.frameworks}}` — the exact keys `detect_stack.sh` emits. Resolve these from `state.json.stack` before passing any prompt to a subagent.
 
 If `detect_stack.sh` returns `unknown` for any field, ask the user before proceeding. Do not guess.
 
@@ -267,7 +268,7 @@ At the top of every feature run:
 
 1. `bash ~/.claude/skills/feature-crew/scripts/detect_stack.sh` → cache.
 2. Read `references/gotchas.md`.
-3. Create `specs/<slug>/` via `bash scripts/new_feature.sh <slug>`.
+3. Create `specs/<slug>/` via `bash ~/.claude/skills/feature-crew/scripts/new_feature.sh <slug>`.
 4. Write `request.md` verbatim.
 5. Spawn triage. Read `crew_plan.json`. Override if heuristics disagree.
 6. Announce plan to user: size, risk, crew, which gates will be auto vs human.

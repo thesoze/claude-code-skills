@@ -47,7 +47,7 @@ Restart Claude Code (or run `/reload`) after installing.
 Two modes, one skill. First run is **kickoff**: a 6–8 question interview (structured choices, not free-form) covering project kind, visibility, threat model, and conventions. Based on answers it picks a tier (`minimal / standard / paranoid`) and installs:
 
 - CLAUDE.md managed sections (posture, absolute rules, external-content handling, commit style, git identity)
-- `.claude/hooks/posttool-injection-scan.py` — PostToolUse hook that scans WebFetch/Bash output for prompt-injection markers (instruction override, role assumption, ChatML smuggling, invisible chars, exfil patterns) and annotates suspicious results before they reach the model
+- `.claude/hooks/posttool-injection-scan.py` — PostToolUse hook that scans WebFetch/Bash output for prompt-injection markers (instruction override, role assumption, ChatML smuggling, invisible chars, exfil patterns) and, on a hit, feeds a `[SECURITY NOTE]` back to the model via `hookSpecificOutput.additionalContext`
 - `.claude/hooks/pretool-secret-scan.py` — PreToolUse hook that blocks Write/Edit of files containing AWS/GitHub/Anthropic/OpenAI tokens, private keys, credential URLs — with allowlist for test fixtures
 - `.claude/settings.json` permissions, scoped to project kind
 - `.claude/project-config.json` — records every interview answer as the project's **contract**

@@ -46,23 +46,14 @@ grep -rE "(WebFetch|urllib|requests\.get|fetch\(|axios\.|http\.Get|httpClient\.)
 
 **Input:** (none — check reality every time).
 
-**Probe (in order of preference):**
+**Probe:** `audit_probe.sh` emits `secret_scan.findings[]`, each `{path, tracked}`. It prefers `gitleaks detect --no-git --redact` if installed, else a regex fallback. The regex set is shared with `hook-pretool-secret-scan.py` (AWS, GitHub classic + fine-grained PAT, Anthropic, OpenAI, Slack, Google, private-key blocks). Use the emitted `tracked` flag — do NOT re-scan here.
 
-1. `gitleaks detect --no-git --redact -v` (if installed)
-2. Fallback regex over staged files + recent 50 commits:
-   - AWS: `AKIA[0-9A-Z]{16}`
-   - GitHub token: `gh[pousr]_[A-Za-z0-9]{36,}`
-   - OpenAI: `sk-[A-Za-z0-9]{48,}`
-   - Anthropic: `sk-ant-[A-Za-z0-9_-]{80,}`
-   - Generic high-entropy: `[A-Za-z0-9+/]{40,}={0,2}` in files named `.env*`, `*secrets*`, `*credentials*`
-   - Private keys: `-----BEGIN (RSA |EC |OPENSSH |)PRIVATE KEY-----`
-
-**Checks:**
+**Checks (drive the BREACH/DRIFT split off the `tracked` flag):**
 
 | Condition | Severity | Title |
 |---|---|---|
-| Any finding in tracked files | `BREACH` | Secret detected in repo |
-| Finding in `.env*` but `.env*` in `.gitignore` and untracked | `DRIFT` | Secret in local .env — warn to rotate if leaked |
+| Any finding with `tracked: true` | `BREACH` | Secret detected in git-tracked file |
+| Findings exist but all `tracked: false` (untracked / gitignored, e.g. local `.env`) | `DRIFT` | Secret in untracked file — rotate if it ever leaked |
 | No findings | `OK` | Secret scan clean |
 
 **Suggested fix:**
