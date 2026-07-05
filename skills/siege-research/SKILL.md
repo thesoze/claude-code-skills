@@ -32,7 +32,7 @@ For each Phase 1 finding, launch an adversarial agent specifically tasked with *
 - "Find the things that would quietly kill this in month 3."
 - "Assume this fails. Write the post-mortem, then check whether those failure modes are already visible."
 
-Each adversarial agent MUST return a verdict: **KILL** (with the specific fatal reason) or **SURVIVE** (with the weakest point it found). No "it depends" verdicts.
+**Steelman first, then attack.** Each adversarial agent must reconstruct the *strongest* version of the thesis before attacking it — a kill only counts if it kills the best form of the idea, not a strawman. Then it MUST return a verdict: **KILL** (with the specific fatal reason) or **SURVIVE** (with the weakest point it found). No "it depends" verdicts.
 
 ### Phase 3 — Deep-Dive on Survivors
 Only survivors get further investment: technical feasibility, legal/regulatory analysis, unit economics or revenue modeling, competitive landscape, distribution channel. The user provides feedback between waves to refine direction — **listen to their redirects** and re-aim the next wave accordingly.
