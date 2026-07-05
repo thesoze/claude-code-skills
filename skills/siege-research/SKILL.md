@@ -37,6 +37,8 @@ For each Phase 1 finding, launch an adversarial agent specifically tasked with *
 ### Phase 3 — Deep-Dive on Survivors
 Only survivors get further investment: technical feasibility, legal/regulatory analysis, unit economics or revenue modeling, competitive landscape, distribution channel. The user provides feedback between waves to refine direction — **listen to their redirects** and re-aim the next wave accordingly.
 
+Where a claim-level research harness is available (e.g. the built-in `deep-research` workflow), run one pass per surviving play to build its evidence base — fan-out search angles, extract falsifiable claims with quotes, adversarially verify each claim. Siege judges *decisions*; delegate *fact* verification to the claim-level layer rather than reinventing it.
+
 ### Phase 4 — Pivot and Re-Challenge
 When a stress-test exposes a fatal weakness, **pivot the idea rather than just burying it**. A stress-test that kills an idea but suggests a stronger version is the MOST valuable outcome of the entire process. Every pivot is a new thesis and gets its **own** fresh adversarial challenge — pivots do not inherit their parent's SURVIVE verdict.
 
@@ -45,6 +47,15 @@ Interleave, don't alternate. While adversarial agents attack Play A, research ag
 
 ### Phase 6 — Final Convergence
 Converge only when the user signals satisfaction OR a declared timer runs out. A finding may appear in the final report only if it survived **at least 2 independent adversarial rounds**. Log everything: kills, survivors, pivots, and the methodology stats (agent count, wave count).
+
+## Evidence Discipline
+
+A KILL verdict is only as good as the evidence behind it. Rules for what counts:
+
+- **Falsifiable claims with receipts.** Every kill reason must rest on concrete, checkable claims — each backed by a direct quote or datum and a source-quality rating (`primary / secondary / blog / forum / unreliable`). Extraordinary claims require primary sources. "This feels saturated" is not a kill; "the three largest incumbents hold 87% share per their 10-Ks" is.
+- **Vote quorums on load-bearing claims.** When a single claim alone decides KILL vs SURVIVE, one skeptic is not enough: run 3 independent verifiers each trying to refute it. ≥2 refutations kills the claim; verifiers default to refuted when uncertain.
+- **Infrastructure failure is not a finding.** An agent that errors, times out, or gets rate-limited casts *no* vote — its claim is **unverified**, never refuted or confirmed. Report unverified claims separately so the user knows to retry rather than reading noise as a verdict.
+- **No silent caps.** If a wave drops angles, skips sources, or leaves claims unverified for budget reasons, say so in the wave briefing. Silent truncation reads as "covered everything" when it didn't.
 
 ## Key Principles
 

@@ -73,6 +73,8 @@ Triages size/risk, picks a right-sized crew, and walks the phases. Artifacts lan
 
 Not a single research pass — an iterative **generate → attack → pivot → re-attack → converge** loop for high-stakes decisions. 5–10+ parallel agents explore angles while adversarial agents actively try to kill each thesis. Every finding needs a KILL or SURVIVE verdict; pivoted ideas get their own fresh stress-test; nothing reaches the final report without surviving at least two adversarial rounds. Output: surviving plays with survival records, a kill list with receipts, and methodology stats. Set a time limit and it runs to the full limit — no premature convergence.
 
+Complements (doesn't replace) claim-level research harnesses like Claude Code's built-in `deep-research`: that layer answers "is this claim true?"; siege answers "is this decision right?" — and delegates fact verification to it during survivor deep-dives. Evidence discipline is borrowed from the same lineage: falsifiable claims with source-quality ratings, 3-vote quorums on load-bearing claims, and infra failures reported as *unverified* rather than counted as verdicts.
+
 ### `/security-review` — static analysis
 
 Detects your stack, runs the appropriate SAST tools (ruff+bandit, semgrep, npm audit, gosec, cargo-audit, brakeman, gitleaks), then reviews the code against OWASP 2025 Top 10 plus domain-specific checks (webhook HMAC, multi-tenant isolation, file uploads, secrets management, background jobs, caching).
