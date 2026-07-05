@@ -6,6 +6,7 @@ Skills, subagents, and slash commands for [Claude Code](https://claude.com/claud
 |---|---|
 | [`skills/project-kickoff`](skills/project-kickoff) | **Setup + audit orchestrator.** Interviews you once when starting a project, installs right-sized CLAUDE.md + hooks + permissions. On rerun, audits the project against its own recorded intent and flags drift. |
 | [`skills/feature-crew`](skills/feature-crew) | **Multi-agent SDLC orchestrator.** Triage → spec → design → build → test → review → ship, with human-in-the-loop gates and fresh-context reviewers. |
+| [`skills/siege-research`](skills/siege-research) | **Adversarial multi-wave decision research.** Parallel research agents generate theses, adversarial agents stress-test each to a KILL or SURVIVE verdict, killed ideas pivot and re-enter the gauntlet. Only findings that survive ≥2 adversarial rounds reach the final report. |
 | [`agents/feature-crew-*`](agents) | 12 subagent definitions paired with feature-crew — PM, architect, backend/frontend/mobile engineers, tester, reviewer, security, devops, docs, UX, triage. |
 | [`commands/`](commands) | `/security-review` (SAST, stack-agnostic static analysis) and `/pentest` (DAST, stack-agnostic runtime pentest). Methodology-first, tool-second. |
 
@@ -20,7 +21,7 @@ This repo is a **Claude Code plugin** — skills, the 12 subagents, and the slas
 /plugin install claude-code-skills@thesoze-claude-code-skills
 ```
 
-That's it. Skills become namespaced — `/claude-code-skills:feature-crew`, `/claude-code-skills:project-kickoff` — and the `/security-review` + `/pentest` commands and all `feature-crew-*` subagents come with them. Update later with `/plugin update claude-code-skills`.
+That's it. Skills become namespaced — `/claude-code-skills:feature-crew`, `/claude-code-skills:project-kickoff`, `/claude-code-skills:siege-research` — and the `/security-review` + `/pentest` commands and all `feature-crew-*` subagents come with them. Update later with `/plugin update claude-code-skills`.
 
 Bundled files reference themselves via `${CLAUDE_PLUGIN_ROOT}`, which Claude Code substitutes at runtime — so the orchestrator and its subagents always resolve to the same installed copy and can't drift apart.
 
@@ -63,6 +64,14 @@ Invoked automatically when you ask Claude Code to build, implement, design, spec
 ```
 
 Triages size/risk, picks a right-sized crew, and walks the phases. Artifacts land in `specs/<YYYY-MM-DD-slug>/` — spec, design, plan, test-plan, review, ADRs, changelog. Resume support if a session is interrupted.
+
+### `/siege-research` — adversarial decision research
+
+```
+/siege-research should we enter the EU market next quarter?
+```
+
+Not a single research pass — an iterative **generate → attack → pivot → re-attack → converge** loop for high-stakes decisions. 5–10+ parallel agents explore angles while adversarial agents actively try to kill each thesis. Every finding needs a KILL or SURVIVE verdict; pivoted ideas get their own fresh stress-test; nothing reaches the final report without surviving at least two adversarial rounds. Output: surviving plays with survival records, a kill list with receipts, and methodology stats. Set a time limit and it runs to the full limit — no premature convergence.
 
 ### `/security-review` — static analysis
 
